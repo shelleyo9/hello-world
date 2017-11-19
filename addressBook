@@ -15,6 +15,7 @@ class Contact:
 addressBook = {}
 addressFile = 'D:\\zhongzi\\address.data'
 
+#pickle.load() will throw a EOFError if the targeted file is empty
 try:
     f = open(addressFile, 'rb')
     data = pickle.load(f)
@@ -29,6 +30,7 @@ operation = int(input(switch))
 
 if operation == 1:
     print('Name\tAddress\tEmail\tCellphone\n')
+    #to loop over keys and values in data, use data.items()
     for name, detail in data.items():
         print('{0}\t{1}\t{2}\t{3}\n'.format(name,detail.address,detail.email,detail.cellphone))
 elif operation == 2:
