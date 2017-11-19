@@ -1,0 +1,89 @@
+#TODO
+#1.simplify code
+#2.need create addressFile manually
+
+import pickle
+import os
+
+class Contact:
+    def __init__(self, name, address, email, cellphone):
+        self.name = name
+        self.address = address
+        self.email = email
+        self.cellphone = cellphone
+
+addressBook = {}
+addressFile = 'D:\\zhongzi\\address.data'
+
+try:
+    f = open(addressFile, 'rb')
+    data = pickle.load(f)
+    f.close()
+except EOFError:
+    data = {}
+
+switch = 'What do you want to do with the address book?\n 1:show contacts\n 2:add contact\n 3:modify contact\n' \
+         '4:search contact\n 5:delete contact\t 0: exit\n'
+# input()返回字符串格式
+operation = int(input(switch))
+
+if operation == 1:
+    print('Name\tAddress\tEmail\tCellphone\n')
+    for name, detail in data.items():
+        print('{0}\t{1}\t{2}\t{3}\n'.format(name,detail.address,detail.email,detail.cellphone))
+elif operation == 2:
+    while True:
+        name = input('Input the name of new contact:')
+        if name in data:
+            print('{0} is already saved in the address book'.format(name))
+        else:
+            break
+    address = input('Input the address of new contact:')
+    email = input('Input the email of new contact:')
+    cellphone = input('Inputhe the cellphone of new contact:')
+    contact = Contact(name, address, email, cellphone)
+    data[name] = contact
+    f = open(addressFile, 'wb')
+    pickle.dump(data, f)
+    f.close()
+    print('Successfully add a new contact {0}'.format(contact))
+elif operation == 3:
+    while True:
+        modifyName = input('Input the name of the contact that you want to modify:')
+        if modifyName not in data:
+            print('Cannot find {0} in the address book'.format(modifyName))
+        else:
+            break
+    newAddress = input('Input the address of new contact:')
+    newEmail = input('Input the email of new contact:')
+    newCellphone = input('Inputhe the cellphone of new contact:')
+    newContact = Contact(modifyName, newAddress, newEmail, newCellphone)
+    data[modifyName] = newContact
+    f = open(addressFile, 'wb')
+    pickle.dump(data, f)
+    f.close()
+    print('Successfully modify {0}\'s address'.format(modifyName))
+elif operation == 4:
+    while True:
+        searchName = input('Input the name of the contact that you want to search:')
+        if searchName in data:
+            print('Find {0}: {1}\t{2}\t{3}'.format(searchName, data[searchName].address, data[searchName].email, data[searchName].cellphone))
+            break
+        else:
+            print('Fail to find {} in the address book'.format(searchName))
+elif operation == 5:
+    while True:
+        deleteName = input('Input the name of the contact that you want to delete:')
+        if deleteName not in data:
+            print('Cannot find {0} in the address book'.format(deleteName))
+        else:
+            break
+    del data[deleteName]
+    f = open(addressFile, 'wb')
+    pickle.dump(data, f)
+    f.close()
+    print('Successfully delete contact {0}'.format(deleteName))
+elif operation == 0:
+    exit()
+else:
+    print('No such operation')
